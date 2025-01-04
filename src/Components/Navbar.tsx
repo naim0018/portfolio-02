@@ -48,17 +48,7 @@ const Navbar = () => {
     } text-gray-900 dark:text-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <motion.a 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="#home"
-            onClick={() => scrollToSection('home')} 
-            className="text-xl font-bold hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-          >
-            Portfolio
-          </motion.a>
-
+  
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (

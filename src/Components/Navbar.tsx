@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { ThemeToggle } from '@/utils/ThemeToggle';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +32,14 @@ const Navbar = () => {
     }
   };
 
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'contact', label: 'Contact' }
+  ];
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
@@ -40,64 +49,51 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <a 
+          <motion.a 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             href="#home"
             onClick={() => scrollToSection('home')} 
             className="text-xl font-bold hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
           >
-            
-          </a>
+            Portfolio
+          </motion.a>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <a 
-              href=""
-              onClick={() => scrollToSection('home')}
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-            >
-              Home
-            </a>
-            <a 
-              href="#about"
-              onClick={() => scrollToSection('about')}
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-            >
-              About
-            </a>
-            <a 
-              href="#skills"
-              onClick={() => scrollToSection('skills')}
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-            >
-              Skills
-            </a>
-            <a 
-              href="#projects"
-              onClick={() => scrollToSection('projects')}
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-            >
-              Projects
-            </a>
-            <a 
-              href="#contact"
-              onClick={() => scrollToSection('contact')}
-              className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
-            >
-              Contact
-            </a>
+            {navItems.map((item) => (
+              <motion.a 
+                key={item.id}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href={`#${item.id}`}
+                onClick={() => scrollToSection(item.id)}
+                className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+              >
+                {item.label}
+              </motion.a>
+            ))}
             
             {/* Theme Toggle Button */}
-            <div className=" rounded-lg transition-colors w-8 h-8 flex items-center justify-center">
-            <ThemeToggle />
-            </div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="rounded-lg transition-colors w-8 h-8 flex items-center justify-center"
+            >
+              <ThemeToggle />
+            </motion.div>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-4">
+            <div className="w-10 h-10">
             <ThemeToggle />
-            <button
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={toggleMenu}
               className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white focus:outline-none"
+              aria-label="Toggle menu"
             >
               {isOpen ? (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,52 +104,37 @@ const Navbar = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a
-                href="#home"
-                onClick={() => scrollToSection('home')}
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                Home
-              </a>
-              <a
-                href="#about"
-                onClick={() => scrollToSection('about')}
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                About
-              </a>
-              <a
-                href="#skills"
-                onClick={() => scrollToSection('skills')}
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                Skills
-              </a>
-              <a
-                href="#projects"
-                onClick={() => scrollToSection('projects')}
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                Projects
-              </a>
-              <a
-                href="#contact"
-                onClick={() => scrollToSection('contact')}
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden overflow-hidden"
+            >
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                {navItems.map((item) => (
+                  <motion.a
+                    key={item.id}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    href={`#${item.id}`}
+                    onClick={() => scrollToSection(item.id)}
+                    className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    {item.label}
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

@@ -1,14 +1,27 @@
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    if (!theme) {
+      setTheme('dark')
+    }
+  }, []) // Only run once on mount
+
+  if (!mounted) {
+    return null
+  }
+  
   const isDark = theme === 'dark'
-  console.log(isDark)
 
   return (
     <button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="p-2 rounded-lg transition-colors"
+      className="p-2 rounded-lg transition-colors flex items-center justify-center border border-gray-300 dark:border-gray-700"
       aria-label="Toggle theme"
     >
       {isDark ? (

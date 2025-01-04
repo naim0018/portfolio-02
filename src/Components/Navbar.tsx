@@ -47,7 +47,7 @@ const Navbar = () => {
         : 'bg-white dark:bg-gray-900'
     } text-gray-900 dark:text-white`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-end items-center h-16">
   
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">

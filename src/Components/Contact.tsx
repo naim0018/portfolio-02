@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTheme } from "next-themes";
+import Swal from 'sweetalert2';
 
 const Contact = () => {
   const { theme } = useTheme();
@@ -13,11 +14,64 @@ const Contact = () => {
     email: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'a3ab19e9-3b2f-430b-b500-4b9cd541721e', // Replace with your Web3Forms access key
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your message has been sent successfully!',
+          icon: 'success',
+          confirmButtonColor: '#3B82F6',
+          background: isDark ? '#1F2937' : '#FFFFFF',
+          color: isDark ? '#FFFFFF' : '#000000'
+        });
+      } else {
+        setSubmitStatus('error');
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to send message. Please try again.',
+          icon: 'error',
+          confirmButtonColor: '#EF4444',
+          background: isDark ? '#1F2937' : '#FFFFFF',
+          color: isDark ? '#FFFFFF' : '#000000'
+        });
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong. Please try again later.',
+        icon: 'error',
+        confirmButtonColor: '#EF4444',
+        background: isDark ? '#1F2937' : '#FFFFFF',
+        color: isDark ? '#FFFFFF' : '#000000'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -41,7 +95,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className=" px-4 md:px-8  transition-all duration-300">
+    <section className=" px-4 md:px-8  transition-all duration-300">
       <motion.div
         initial="hidden"
         animate="visible"
@@ -49,9 +103,6 @@ const Contact = () => {
         className="max-w-4xl mx-auto"
       >
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-            Let&apos;s Connect
-          </h2>
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
             Ready to bring your ideas to life? Drop me a message and let&apos;s create something amazing together.
           </p>
@@ -72,6 +123,7 @@ const Contact = () => {
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-700/90 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200"
                 required
                 placeholder="Your name"
+                disabled={isSubmitting}
               />
             </div>
 
@@ -88,6 +140,7 @@ const Contact = () => {
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-700/90 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200"
                 required
                 placeholder="your.email@example.com"
+                disabled={isSubmitting}
               />
             </div>
 
@@ -104,6 +157,7 @@ const Contact = () => {
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-700/90 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all duration-200 resize-none"
                 required
                 placeholder="Your message here..."
+                disabled={isSubmitting}
               />
             </div>
           </div>
@@ -112,9 +166,10 @@ const Contact = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-            className="w-full py-4 px-6 text-white font-medium text-lg bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 dark:hover:from-blue-500 dark:hover:via-indigo-500 dark:hover:to-purple-500 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl dark:shadow-blue-500/20"
+            disabled={isSubmitting}
+            className="w-full py-4 px-6 text-white font-medium text-lg bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 dark:hover:from-blue-500 dark:hover:via-indigo-500 dark:hover:to-purple-500 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl dark:shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Send Message
+            {isSubmitting ? 'Sending...' : 'Send Message'}
           </motion.button>
         </form>
       </motion.div>

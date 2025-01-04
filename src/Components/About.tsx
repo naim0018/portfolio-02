@@ -9,13 +9,8 @@ const About = () => {
   const isDark = theme === 'dark';
 
   return (
-    <div id="about" className="bg-white dark:bg-gray-900 transition-colors duration-200">
+    <div  className="bg-white dark:bg-gray-900 transition-colors duration-200 py-16">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">About Me</h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-purple-600 to-pink-600 mx-auto"></div>
-        </div>
-
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
           <div className="relative">
@@ -62,10 +57,10 @@ const About = () => {
 
             <div className="flex gap-4 pt-4">
               <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium hover:opacity-90 transition-opacity">
-                Download CV
+                <a href="https://drive.google.com/file/d/1S2dnVLAzqSrf_jC-eue_UeCqzges5Dtd/view?usp=sharing" target="_blank">Download CV</a>
               </button>
               <button className="px-6 py-3 bg-gray-100 dark:bg-white/5 backdrop-blur-sm rounded-xl text-gray-900 dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">
-                Contact Me
+                <a href="#contact">Contact Me</a>
               </button>
             </div>
           </div>

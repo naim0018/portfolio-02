@@ -58,14 +58,15 @@ const Navbar = () => {
                 whileTap={{ scale: 0.95 }}
                 href={`#${item.id}`}
                 onClick={() => scrollToSection(item.id)}
-                className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors "
               >
                 {item.label}
               </motion.a>
             ))}
             
             {/* Theme Toggle Button */}
-            <motion.div 
+            <motion.div
+            
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="rounded-lg transition-colors w-8 h-8 flex items-center justify-center"
